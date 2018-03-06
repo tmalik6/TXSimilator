@@ -1,0 +1,17 @@
+<configuration scan="true" debug="true">
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="unideb" level="TRACE" />
+
+    <logger name="com.sun.javafx.webkit.prism" level = "info" />
+
+    <root level="WARN">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

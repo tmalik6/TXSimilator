@@ -1,0 +1,14 @@
+/tmpdata
+*.iml
+.idea
+.eclipse
+target
+.DS_Store
+.ipynb_checkpoints
+datasorting.ipynb
+datasorting.py
+all.tsv
+all_3.csv
+all_4.csv
+nbactions.xml
+desktop.ini
