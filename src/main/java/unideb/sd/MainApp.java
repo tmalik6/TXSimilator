@@ -29,7 +29,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-        
+    
+    public static Stage SecoundStage = new Stage();
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainApp.fxml"));
@@ -38,12 +40,12 @@ public class MainApp extends Application {
         primaryStage.setScene(scene);
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if (key.getCode() == KeyCode.P) {
-                if (Controller.isPause) {
-                    Controller.Start();
-                    Controller.isPause = false;
+                if (MapViewController.isPause) {
+                    MapViewController.Start();
+                    MapViewController.isPause = false;
                 } else {
-                    Controller.Pause();
-                    Controller.isPause = true;
+                    MapViewController.Pause();
+                    MapViewController.isPause = true;
                 } 
             }
         });

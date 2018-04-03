@@ -45,27 +45,29 @@ public class readtsvbc {
     private static double[] localdata;
     public static List<List<Double>> superdatam = new ArrayList<List<Double>>();
     public static List<Double> wrapper;
-    private static int szamlalo = -1;
+    private static int firstcolumn;
+    private static int secoundcolumn;
+    private static int thirdcolumn;
+    private static int forthcolumn;
+    private static String cvsSplitBy;
 
-    public static void readcsv() {
-        File file = new File(Controller.FilePath);
+    public static void readcsv(String FilePath) {
+        File file = new File(FilePath);
         BufferedReader br = null;
         String line = "";
-        String cvsSplitBy = ",";
 
         try {
 
             br = new BufferedReader(new FileReader(file));
             while ((line = br.readLine()) != null) {
-                szamlalo++;
                 data = line.split(cvsSplitBy);
-                valaszto[0] = data[0];
-                local.add(LocalDateTime.parse(data[1], DateTimeFormatter.ISO_ZONED_DATE_TIME));
-                valaszto[1] = data[2];
-                valaszto[2] = data[3];
+                valaszto[0] = data[firstcolumn];
+                local.add(LocalDateTime.parse(data[secoundcolumn], DateTimeFormatter.ISO_ZONED_DATE_TIME));
+                valaszto[1] = data[thirdcolumn];
+                valaszto[2] = data[forthcolumn];
                 localdata = Arrays.asList(valaszto).stream().mapToDouble(Double::parseDouble).toArray();
                 wrapper = Arrays.stream(localdata).boxed().collect(Collectors.toList());
-                superdatam.add(wrapper);                
+                superdatam.add(wrapper);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,14 +82,38 @@ public class readtsvbc {
         }
     }
 
-    public static List<List<Double>> getIdsandCoordinates(){
+    public static List<List<Double>> getIdsandCoordinates() {
         return superdatam;
     }
-    
+
     public static List<LocalDateTime> getDates() {
         return local;
     }
 
+    public static void setFirstcolumn(int firstcolumn) {
+        readtsvbc.firstcolumn = firstcolumn;
+    }
+
+    public static void setSecoundcolumn(int secoundcolumn) {
+        readtsvbc.secoundcolumn = secoundcolumn;
+    }
+
+    public static void setThirdcolumn(int thirdcolumn) {
+        readtsvbc.thirdcolumn = thirdcolumn;
+    }
+
+    public static void setForthcolumn(int forthcolumn) {
+        readtsvbc.forthcolumn = forthcolumn;
+    }
+
+    public static String getCvsSplitBy() {
+        return cvsSplitBy;
+    }
+
+    public static void setCvsSplitBy(String cvsSplitBy) {
+        readtsvbc.cvsSplitBy = cvsSplitBy;
+    }
+    
     public static Map<LocalDate, Long> datamaker() {
         List<LocalDate> localdate = new ArrayList<>();
         for (int i = 0; i < local.size(); i++) {

@@ -3,7 +3,7 @@
 
     <groupId>unideb.sd</groupId>
     <artifactId>TXSimilator</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>TXSimilator</name>
     <description>Application for the Simulating Taxis Data</description>
 
@@ -47,6 +47,12 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 

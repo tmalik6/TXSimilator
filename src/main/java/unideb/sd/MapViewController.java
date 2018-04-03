@@ -39,7 +39,6 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -55,32 +54,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Duration;
+import static unideb.sd.MainApp.SecoundStage;
 
-public class Controller {
+public class MapViewController {
 
-    private static final Logger logger = LoggerFactory.getLogger(Controller.class);
+    private static final Logger logger = LoggerFactory.getLogger(MapViewController.class);
     //
     public static Timeline animation;
     public static String FilePath = "NOFILE";
+    public static String FileName;
     private final FileChooser fileChooser = new FileChooser();
-    public static Stage SecoundStage = new Stage();
     public static boolean isPause = true;
     private static final int ZOOM_DEFAULT = 18;
     //
     public LocalDateTime Ido = LocalDateTime.of(2007, Month.JANUARY, 1, 0, 0, 0);
     private static final Coordinate coordMapCenter = new Coordinate(37.786956, -122.440279);
     public List<Taxi> TaxiList = new ArrayList<>();
-    public static List<LocalDateTime> TimeStamps = new ArrayList<>();    
+    public static List<LocalDateTime> TimeStamps = new ArrayList<>();
     public static List<List<Double>> IdsandCoordinates = new ArrayList<List<Double>>();
-    
+
     @FXML
     private MapView mapView;
 
@@ -98,7 +101,7 @@ public class Controller {
 
     @FXML
     private Button buttonMapCenter;
-    
+
     @FXML
     private Button taxiadd;
 
@@ -116,10 +119,10 @@ public class Controller {
 
     @FXML
     private Button Addfile;
-    
+
     @FXML
     private Button buttonZoom;
-    
+
     @FXML
     private Label labelCenter;
 
@@ -138,14 +141,14 @@ public class Controller {
     @FXML
     private Label AnimationLabel;
 
-    public Controller() {
+    public MapViewController() {
         animation = new Timeline(new KeyFrame(Duration.seconds(1), e -> moveSC()));
         animation.setCycleCount(Timeline.INDEFINITE);
     }
 
     public void initialize() {
         logger.trace("begin initialize cache and map");
-        
+
         final OfflineCache offlineCache = mapView.getOfflineCache();
         final String cacheDir = System.getProperty("java.io.tmpdir") + "\\mapjfx-cache";
         logger.info("Following dir will be used: " + cacheDir);
@@ -172,15 +175,14 @@ public class Controller {
         // bind the map's center and zoom properties to the corresponding labels and format them
         labelCenter.textProperty().bind(Bindings.format("center: %s", mapView.centerProperty()));
         labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
-        ErrorLabel.setText("Input File Needed");
         mapView.initializedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 afterMapIsInitialized();
             }
-        });
-
+        });        
         setupEventHandlers();
-
+        ErrorLabel.setText("Input File Needed");
+        
         logger.trace("start map initialization");
         mapView.initialize();
         logger.debug("initialization finished");
@@ -213,25 +215,45 @@ public class Controller {
             labelEvent.setText("Event: label right clicked: " + event.getMapLabel().getText());
         });
         Addfile.setOnAction((final ActionEvent e) -> {
-            configureFileChooser(fileChooser);
+            /*configureFileChooser(fileChooser);
             File file = fileChooser.showOpenDialog(SecoundStage);
             if (file != null) {
                 FilePath = file.getAbsolutePath();
                 ErrorLabel.setText("Input file: " + file.getName());
-                readtsvbc.readcsv();
+                readtsvbc.readcsv(FilePath);
                 TimeStamps = readtsvbc.getDates();
                 IdsandCoordinates = readtsvbc.getIdsandCoordinates();
+            }*/
+            Parent root;
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FileHandler.fxml"));
+                root = loader.load();
+                Scene scene = new Scene(root);
+                SecoundStage.setScene(scene);                
+                SecoundStage.show();
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(FileHandlerController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-
+        
         logger.trace("map handlers initialized");
     }
-
+    /*
+    ErrorLabel.setText("Input file: " + FileName); !!!
+    */
     private void setControlsDisable(boolean flag) {
         topControls.setDisable(flag);
         leftControls.setDisable(flag);
     }
-
+    
+    public static void initializefile(String FilePathP, String FileNameP){
+                FilePath = FilePathP;
+                FileName = FileNameP;                
+                readtsvbc.readcsv(FilePath);
+                TimeStamps = readtsvbc.getDates();
+                IdsandCoordinates = readtsvbc.getIdsandCoordinates();
+    }
+    
     private void afterMapIsInitialized() {
         logger.debug("setting center and enabling controls...");
         mapView.setZoom(ZOOM_DEFAULT);
@@ -329,6 +351,16 @@ public class Controller {
             logger.error("No File Selected Yet!");
         }
     }
+    public void RestartAnimation(){
+        if (isPause && !FilePath.equalsIgnoreCase("NOFILE")) {
+            Ido = LocalDateTime.of(2007, Month.JANUARY, 1, 0, 0, 0);
+            IdoLabel.setText(Ido.toString());
+            AnimationLabel.setText("Animation Restarted");
+            removemarker(true);
+        } else {
+            logger.error("Animation should be paused or No input File");
+        }
+    }
 
     @FXML
     private void BCactionhour(ActionEvent event) {
@@ -356,13 +388,6 @@ public class Controller {
 
     @FXML
     private void RestartAnimationButton(ActionEvent event) {
-        if (isPause && !FilePath.equalsIgnoreCase("NOFILE")) {
-            Ido = LocalDateTime.of(2007, Month.JANUARY, 1, 0, 0, 0);
-            IdoLabel.setText(Ido.toString());
-            AnimationLabel.setText("Animation Restarted");
-            removemarker(true);
-        } else {
-            logger.error("Animation should be paused or No input File");
-        }
+        RestartAnimation();
     }
 }

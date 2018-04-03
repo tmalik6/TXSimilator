@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ /*
+ * #%L
+ * TXSimilator
+ * %%
+ * Copyright (C) 2017-2018 Debreceni Egyetem, Informatikai Kar
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #L%
+ */
+-->
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unideb.sd.FileHandlerController">
+   <children>
+      <ChoiceBox fx:id="FirstCB" layoutX="404.0" layoutY="79.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="SecoundCB" layoutX="404.0" layoutY="128.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="ThirdCB" layoutX="404.0" layoutY="175.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="ForthCB" layoutX="404.0" layoutY="221.0" prefWidth="150.0" />      
+      <ChoiceBox fx:id="SplitCB" layoutX="404.0" layoutY="268.0" prefWidth="150.0" />
+      <Label layoutX="47.0" layoutY="83.0" text="1st Column" />
+      <Label layoutX="46.0" layoutY="132.0" text="2nd Column" />
+      <Label layoutX="46.0" layoutY="179.0" text="3rd Column" />
+      <Label layoutX="46.0" layoutY="225.0" text="4th Column" />
+      <Label layoutX="46.0" layoutY="272.0" text="Split by" />
+      <Button fx:id="AddButton" layoutX="46.0" layoutY="338.0" mnemonicParsing="false" onAction="#AddButtonAction" prefHeight="25.0" prefWidth="150.0" text="Add" />
+      <Button fx:id="ExitButton" layoutX="398.0" layoutY="338.0" mnemonicParsing="false" onAction="#ExitButtonAction" prefHeight="25.0" prefWidth="150.0" text="Exit" />
+      <Button fx:id="ChooseButton" layoutX="46.0" layoutY="32.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="224.0" text="Choose File" />
+      <Label fx:id="FilenameLabel" layoutX="354.0" layoutY="36.0" prefHeight="17.0" prefWidth="211.0" />
+      <Button fx:id="AddCloseButton" layoutX="225.0" layoutY="338.0" mnemonicParsing="false" onAction="#AddCloseButtonAction" prefHeight="25.0" prefWidth="150.0" text="Add&amp;Close" />
+      </children>
+</AnchorPane>
