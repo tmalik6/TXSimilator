@@ -60,12 +60,17 @@ import java.util.stream.Stream;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.input.ScrollEvent;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import static unideb.sd.MainApp.SecoundStage;
+import javafx.scene.layout.Pane;
 
 public class MapViewController {
 
@@ -83,6 +88,11 @@ public class MapViewController {
     public List<Taxi> TaxiList = new ArrayList<>();
     public static List<LocalDateTime> TimeStamps = new ArrayList<>();
     public static List<List<Double>> IdsandCoordinates = new ArrayList<List<Double>>();
+    public List<HeatMapPoint> Points = new ArrayList<>();
+    private int LayoutX = 280; //280
+    private int LayoutY = 1;   //1
+    private int ScalaX = 6;    //6
+    private int ScalaY = 6;    //6
 
     @FXML
     private MapView mapView;
@@ -123,6 +133,21 @@ public class MapViewController {
     @FXML
     private Button buttonZoom;
 
+    @FXML
+    private Button HeatMapButton;
+
+    @FXML
+    private TextField LayoutXTF;
+    
+    @FXML
+    private TextField LayoutYTF;
+    
+    @FXML
+    private TextField ScalaXTF;
+    
+    @FXML
+    private TextField ScalaYTF;
+    
     @FXML
     private Label labelCenter;
 
@@ -179,10 +204,10 @@ public class MapViewController {
             if (newValue) {
                 afterMapIsInitialized();
             }
-        });        
+        });
         setupEventHandlers();
         ErrorLabel.setText("Input File Needed");
-        
+
         logger.trace("start map initialization");
         mapView.initialize();
         logger.debug("initialization finished");
@@ -215,45 +240,37 @@ public class MapViewController {
             labelEvent.setText("Event: label right clicked: " + event.getMapLabel().getText());
         });
         Addfile.setOnAction((final ActionEvent e) -> {
-            /*configureFileChooser(fileChooser);
-            File file = fileChooser.showOpenDialog(SecoundStage);
-            if (file != null) {
-                FilePath = file.getAbsolutePath();
-                ErrorLabel.setText("Input file: " + file.getName());
-                readtsvbc.readcsv(FilePath);
-                TimeStamps = readtsvbc.getDates();
-                IdsandCoordinates = readtsvbc.getIdsandCoordinates();
-            }*/
             Parent root;
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FileHandler.fxml"));
                 root = loader.load();
                 Scene scene = new Scene(root);
-                SecoundStage.setScene(scene);                
+                SecoundStage.setScene(scene);
                 SecoundStage.show();
             } catch (IOException ex) {
                 java.util.logging.Logger.getLogger(FileHandlerController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        
+
         logger.trace("map handlers initialized");
     }
+
     /*
     ErrorLabel.setText("Input file: " + FileName); !!!
-    */
+     */
     private void setControlsDisable(boolean flag) {
         topControls.setDisable(flag);
         leftControls.setDisable(flag);
     }
-    
-    public static void initializefile(String FilePathP, String FileNameP){
-                FilePath = FilePathP;
-                FileName = FileNameP;                
-                readtsvbc.readcsv(FilePath);
-                TimeStamps = readtsvbc.getDates();
-                IdsandCoordinates = readtsvbc.getIdsandCoordinates();
+
+    public static void initializefile(String FilePathP, String FileNameP) {
+        FilePath = FilePathP;
+        FileName = FileNameP;
+        readtsvbc.readcsv(FilePath);
+        TimeStamps = readtsvbc.getDates();
+        IdsandCoordinates = readtsvbc.getIdsandCoordinates();
     }
-    
+
     private void afterMapIsInitialized() {
         logger.debug("setting center and enabling controls...");
         mapView.setZoom(ZOOM_DEFAULT);
@@ -351,7 +368,8 @@ public class MapViewController {
             logger.error("No File Selected Yet!");
         }
     }
-    public void RestartAnimation(){
+
+    public void RestartAnimation() {
         if (isPause && !FilePath.equalsIgnoreCase("NOFILE")) {
             Ido = LocalDateTime.of(2007, Month.JANUARY, 1, 0, 0, 0);
             IdoLabel.setText(Ido.toString());
@@ -389,5 +407,79 @@ public class MapViewController {
     @FXML
     private void RestartAnimationButton(ActionEvent event) {
         RestartAnimation();
+    }
+
+    @FXML
+    private void HeatMapButton(ActionEvent event) {
+        RestartAnimation();
+        //adding this for testing Layouts and Scalas
+        if (!LayoutXTF.getText().isEmpty()){
+           LayoutX = Integer.parseInt(LayoutXTF.getText());
+        }
+        if (!LayoutYTF.getText().isEmpty()){
+           LayoutY = Integer.parseInt(LayoutYTF.getText());
+        }
+        if (!ScalaXTF.getText().isEmpty()){
+           ScalaX = Integer.parseInt(ScalaXTF.getText());
+        }
+        if (!ScalaXTF.getText().isEmpty()){
+           ScalaX = Integer.parseInt(ScalaXTF.getText());
+        }
+        ShowHeatMap();
+        /*Coordinate coord;
+        Marker Markers;
+        for (int i = 0; i < TimeStamps.size(); i++) {
+            if (TimeStamps.get(i).isBefore(Ido.plusHours(1))) {
+                //addmarker(IdsandCoordinates.get(i).get(0), IdsandCoordinates.get(i).get(1), IdsandCoordinates.get(i).get(2));  
+                coord = new Coordinate(IdsandCoordinates.get(i).get(1), IdsandCoordinates.get(i).get(2));
+                //Markers = Marker.createProvided(Marker.Provided.BLUE).setVisible(true);
+                Markers = new Marker(getClass().getResource("/ksc.png"), -20, -20).setPosition(coord).setVisible(true);
+                mapView.addMarker(Markers);
+            }
+        }*/
+    }
+
+    public void ShowHeatMap() {
+        final double SCALE_DELTA = 1.1;
+        Pane HM = new Pane();
+        //Points.add(new HeatMapPoint(100, 100));
+        for (int i = 0; i < TimeStamps.size(); i++) {
+            if (TimeStamps.get(i).isBefore(Ido.plusHours(1))) {
+                HeatMapPoint HMP = new HeatMapPoint((Math.abs(IdsandCoordinates.get(i).get(1))), (Math.abs(IdsandCoordinates.get(i).get(2)) ));
+                //System.out.println("1: " + (Math.abs(IdsandCoordinates.get(i).get(1))) + " 2:" + (Math.abs(IdsandCoordinates.get(i).get(2)) ));
+                Points.add(HMP);
+            }
+        }
+        System.out.println("Eredeti:" + HM.getLayoutY());
+        HM.setLayoutX(LayoutX);
+        HM.setLayoutY(LayoutY);
+        System.out.println("Layoutx:"+HM.getLayoutX());
+        System.out.println(HM.getLayoutY());
+        HM.setScaleX(ScalaX);
+        HM.setScaleY(ScalaY);
+        HM.getChildren().addAll(Points);
+        HM.setOnScroll(new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                event.consume();
+
+                if (event.getDeltaY() == 0) {
+                    return;
+                }
+
+                double scaleFactor
+                        = (event.getDeltaY() > 0)
+                        ? SCALE_DELTA
+                        : 1 / SCALE_DELTA;
+
+                HM.setScaleX(HM.getScaleX() * scaleFactor);
+                HM.setScaleY(HM.getScaleY() * scaleFactor);
+            }
+        });
+        Group group = new Group(HM);
+        Scene scene = new Scene(group, 500, 500);
+        SecoundStage.setTitle("HeatMap");
+        SecoundStage.setScene(scene);
+        SecoundStage.show();
     }
 }
