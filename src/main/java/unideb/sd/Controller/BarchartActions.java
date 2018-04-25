@@ -1,4 +1,4 @@
-package unideb.sd;
+package unideb.sd.Controller;
 /*
  * #%L
  * TXSimilator
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class BarchartActions {
     private static final Logger logger = LoggerFactory.getLogger(BarchartActions.class);
         
-    public static void BCaction2(Map<Integer, Long> LocalMapom, String felirat, String xlabel, String FilePath, Stage StagetoShow) {
+    public static void BarchartActionsGeneral(Map<Integer, Long> LocalMapom, String felirat, String xlabel, String FilePath, Stage StagetoShow) {
         if (!FilePath.equalsIgnoreCase("NOFILE")) {
             Map<Integer, Long> LocalMap = LocalMapom;
             Set s = LocalMap.entrySet();
@@ -65,7 +65,7 @@ public class BarchartActions {
             logger.error("No File Selected Yet!");
         }
     }
-    public static void BCaction3(Map<LocalDate, Long> LocalMapom, String felirat, String xlabel, String FilePath, Stage StagetoShow) {
+    public static void BarchartActionsLocalDate(Map<LocalDate, Long> LocalMapom, String felirat, String xlabel, String FilePath, Stage StagetoShow) {
         if (!FilePath.equalsIgnoreCase("NOFILE")) {
             Map<LocalDate, Long> LocalMap = LocalMapom;
             Set s = LocalMap.entrySet();

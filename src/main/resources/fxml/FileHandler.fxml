@@ -30,7 +30,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unideb.sd.FileHandlerController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unideb.sd.Controller.FileHandlerController">
    <children>
       <ChoiceBox fx:id="FirstCB" layoutX="404.0" layoutY="79.0" prefWidth="150.0" />
       <ChoiceBox fx:id="SecoundCB" layoutX="404.0" layoutY="128.0" prefWidth="150.0" />

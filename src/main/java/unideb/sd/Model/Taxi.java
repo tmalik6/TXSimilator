@@ -1,4 +1,4 @@
-package unideb.sd;
+package unideb.sd.Model;
 /*
  * #%L
  * TXSimilator

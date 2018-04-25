@@ -1,4 +1,4 @@
-package unideb.sd;
+package unideb.sd.Controller;
 
 /*
  * #%L
@@ -21,6 +21,8 @@ package unideb.sd;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import unideb.sd.Model.HeatMapPoint;
+import unideb.sd.Model.Taxi;
 import com.sothawo.mapjfx.Coordinate;
 import com.sothawo.mapjfx.CoordinateLine;
 import com.sothawo.mapjfx.MapLabel;
@@ -69,8 +71,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-import static unideb.sd.MainApp.SecoundStage;
+import static unideb.sd.Main.MainApp.SecoundStage;
 import javafx.scene.layout.Pane;
+import unideb.sd.Model.FileProcesser;
 
 public class MapViewController {
 
@@ -206,7 +209,7 @@ public class MapViewController {
             }
         });
         setupEventHandlers();
-        ErrorLabel.setText("Input File Needed");
+        //ErrorLabel.setText("Input File Needed");
 
         logger.trace("start map initialization");
         mapView.initialize();
@@ -266,9 +269,9 @@ public class MapViewController {
     public static void initializefile(String FilePathP, String FileNameP) {
         FilePath = FilePathP;
         FileName = FileNameP;
-        readtsvbc.readcsv(FilePath);
-        TimeStamps = readtsvbc.getDates();
-        IdsandCoordinates = readtsvbc.getIdsandCoordinates();
+        FileProcesser.readcsv(FilePath);
+        TimeStamps = FileProcesser.getDates();
+        IdsandCoordinates = FileProcesser.getIdsandCoordinates();
     }
 
     private void afterMapIsInitialized() {
@@ -382,25 +385,25 @@ public class MapViewController {
 
     @FXML
     private void BCactionhour(ActionEvent event) {
-        Map<Integer, Long> LocalMap = readtsvbc.hourmaker();
-        BarchartActions.BCaction2(LocalMap, "Data per Hour", "Hours", FilePath, SecoundStage);
+        Map<Integer, Long> LocalMap = FileProcesser.hourmaker();
+        BarchartActions.BarchartActionsGeneral(LocalMap, "Data per Hour", "Hours", FilePath, SecoundStage);
     }
 
     @FXML
     private void BCactionminute(ActionEvent event) {
-        Map<Integer, Long> LocalMap = readtsvbc.minutemaker();
-        BarchartActions.BCaction2(LocalMap, "Data per minutes", "Minutes", FilePath, SecoundStage);
+        Map<Integer, Long> LocalMap = FileProcesser.minutemaker();
+        BarchartActions.BarchartActionsGeneral(LocalMap, "Data per minutes", "Minutes", FilePath, SecoundStage);
     }
 
     @FXML
     private void BCactiondate(ActionEvent event) {
-        Map<LocalDate, Long> LocalMap = readtsvbc.datamaker();
-        BarchartActions.BCaction3(LocalMap, "Data per Day", "Dates", FilePath, SecoundStage);
+        Map<LocalDate, Long> LocalMap = FileProcesser.datamaker();
+        BarchartActions.BarchartActionsLocalDate(LocalMap, "Data per Day", "Dates", FilePath, SecoundStage);
     }
 
     @FXML
     private void BCactiondays(ActionEvent event) {
-        Map<Integer, Long> LocalMap = readtsvbc.hourmaker();
+        Map<Integer, Long> LocalMap = FileProcesser.hourmaker();
         //BCaction2(LocalMap);
     }
 

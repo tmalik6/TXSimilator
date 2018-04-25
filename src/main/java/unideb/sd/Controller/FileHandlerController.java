@@ -1,4 +1,4 @@
-package unideb.sd;
+package unideb.sd.Controller;
 
 /*
  * #%L
@@ -37,7 +37,8 @@ import javafx.stage.Stage;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static unideb.sd.MainApp.SecoundStage;
+import unideb.sd.Model.FileProcesser;
+import static unideb.sd.Main.MainApp.SecoundStage;
 
 public class FileHandlerController implements Initializable {
 
@@ -161,7 +162,7 @@ public class FileHandlerController implements Initializable {
         setValidatecombination(ChoosenOne);
         
         ChoosenOne = (String) SplitCB.getValue();
-        readtsvbc.setCvsSplitBy(ChoosenOne);
+        FileProcesser.setCvsSplitBy(ChoosenOne);
 
         if (StringUtils.countMatches(getValidatecombination(), "ID") > 1) {
             return false;
@@ -193,61 +194,61 @@ public class FileHandlerController implements Initializable {
             case 1:
                 switch (switcher) {
                     case "ID":
-                        readtsvbc.setFirstcolumn(0);
+                        FileProcesser.setFirstcolumn(0);
                         break;
                     case "DateTime":
-                        readtsvbc.setFirstcolumn(1);
+                        FileProcesser.setFirstcolumn(1);
                         break;
                     case "Latitude":
-                        readtsvbc.setFirstcolumn(2);
+                        FileProcesser.setFirstcolumn(2);
                         break;
                     case "Longitude":
-                        readtsvbc.setFirstcolumn(3);
+                        FileProcesser.setFirstcolumn(3);
                         break;
                 }
             case 2:
                 switch (switcher) {
                     case "ID":
-                        readtsvbc.setSecoundcolumn(0);
+                        FileProcesser.setSecoundcolumn(0);
                         break;
                     case "DateTime":
-                        readtsvbc.setSecoundcolumn(1);
+                        FileProcesser.setSecoundcolumn(1);
                         break;
                     case "Latitude":
-                        readtsvbc.setSecoundcolumn(2);
+                        FileProcesser.setSecoundcolumn(2);
                         break;
                     case "Longitude":
-                        readtsvbc.setSecoundcolumn(3);
+                        FileProcesser.setSecoundcolumn(3);
                         break;
                 }
             case 3:
                 switch (switcher) {
                     case "ID":
-                        readtsvbc.setThirdcolumn(0);
+                        FileProcesser.setThirdcolumn(0);
                         break;
                     case "DateTime":
-                        readtsvbc.setThirdcolumn(1);
+                        FileProcesser.setThirdcolumn(1);
                         break;
                     case "Latitude":
-                        readtsvbc.setThirdcolumn(2);
+                        FileProcesser.setThirdcolumn(2);
                         break;
                     case "Longitude":
-                        readtsvbc.setThirdcolumn(3);
+                        FileProcesser.setThirdcolumn(3);
                         break;
                 }
             case 4:
                 switch (switcher) {
                     case "ID":
-                        readtsvbc.setForthcolumn(0);
+                        FileProcesser.setForthcolumn(0);
                         break;
                     case "DateTime":
-                        readtsvbc.setForthcolumn(1);
+                        FileProcesser.setForthcolumn(1);
                         break;
                     case "Latitude":
-                        readtsvbc.setForthcolumn(2);
+                        FileProcesser.setForthcolumn(2);
                         break;
                     case "Longitude":
-                        readtsvbc.setForthcolumn(3);
+                        FileProcesser.setForthcolumn(3);
                         break;
                 }
         }

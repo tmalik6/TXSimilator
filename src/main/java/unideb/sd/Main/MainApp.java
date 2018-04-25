@@ -1,4 +1,4 @@
-package unideb.sd;
+package unideb.sd.Main;
 /*
  * #%L
  * TXSimilator
@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import unideb.sd.Controller.MapViewController;
 
 public class MainApp extends Application {
     

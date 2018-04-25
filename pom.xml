@@ -141,12 +141,6 @@
                     <repositoryName>lib</repositoryName>
                     <useAllProjectDependencies>false</useAllProjectDependencies>
 
-                    <programs>
-                        <program>
-                            <id>mapjfx-demo</id>
-                            <mainClass>com.sothawo.mapjfx.demo.DemoApp</mainClass>
-                        </program>
-                    </programs>
                 </configuration>
             </plugin>
             <plugin>
