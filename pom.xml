@@ -140,7 +140,13 @@
                     <repositoryLayout>flat</repositoryLayout>
                     <repositoryName>lib</repositoryName>
                     <useAllProjectDependencies>false</useAllProjectDependencies>
-
+                    
+                    <programs>	
+-                        <program>	
+-                            <id>TXSimilator</id>	
+-                            <mainClass>unideb.sd.Main.MainApp</mainClass>	
+-                        </program>	
+-                    </programs>
                 </configuration>
             </plugin>
             <plugin>

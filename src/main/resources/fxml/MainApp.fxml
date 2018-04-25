@@ -75,8 +75,10 @@
                                 <Button fx:id="Addfile" text="Add File" maxWidth="Infinity"/>
                                 <Label fx:id="IdoLabel" maxWidth="Infinity"/>
                                 <Label fx:id="AnimationLabel" maxWidth="Infinity"/>
-                                <Label fx:id="ErrorLabel" maxWidth="Infinity" text="Input file: all.tsv"/>
-                               <!-- <TextField fx:id="LayoutXTF" layoutX="467.0" layoutY="91.0" prefHeight="26.0" prefWidth="150.0" />
+                                <Label fx:id="ErrorLabel" maxWidth="Infinity" /> <!--text="Input file: all.tsv"/> -->
+                                <Button fx:id="nextLinesButton" text="Next 100 Line" onAction="#nextLinesButtonAction" maxWidth="Infinity"/>
+                                <Button fx:id="previousLinesButton" text="Previous 100 Line" onAction="#previousLinesButtonAction" maxWidth="Infinity"/>
+                                <!-- <TextField fx:id="LayoutXTF" layoutX="467.0" layoutY="91.0" prefHeight="26.0" prefWidth="150.0" />
                                 <TextField fx:id="LayoutYTF" layoutX="467.0" layoutY="91.0" prefHeight="26.0" prefWidth="150.0" />
                                 <TextField fx:id="ScalaXTF" layoutX="467.0" layoutY="91.0" prefHeight="26.0" prefWidth="150.0" />
                                 <TextField fx:id="ScalaYTF" layoutX="467.0" layoutY="91.0" prefHeight="26.0" prefWidth="150.0" />  -->

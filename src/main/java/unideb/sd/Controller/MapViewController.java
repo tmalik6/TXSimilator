@@ -73,6 +73,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import static unideb.sd.Main.MainApp.SecoundStage;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import unideb.sd.Model.FileProcesser;
 
 public class MapViewController {
@@ -89,9 +90,11 @@ public class MapViewController {
     public LocalDateTime Ido = LocalDateTime.of(2007, Month.JANUARY, 1, 0, 0, 0);
     private static final Coordinate coordMapCenter = new Coordinate(37.786956, -122.440279);
     public List<Taxi> TaxiList = new ArrayList<>();
+    public List<CoordinateLine> CoordinateLineList = new ArrayList<>();
     public static List<LocalDateTime> TimeStamps = new ArrayList<>();
     public static List<List<Double>> IdsandCoordinates = new ArrayList<List<Double>>();
     public List<HeatMapPoint> Points = new ArrayList<>();
+    public int heatmapCounter = 0;
     private int LayoutX = 280; //280
     private int LayoutY = 1;   //1
     private int ScalaX = 6;    //6
@@ -131,6 +134,12 @@ public class MapViewController {
     private Button RestartAnimation;
 
     @FXML
+    private Button previousLinesButton;
+
+    @FXML
+    private Button nextLinesButton;
+
+    @FXML
     private Button Addfile;
 
     @FXML
@@ -141,16 +150,16 @@ public class MapViewController {
 
     @FXML
     private TextField LayoutXTF;
-    
+
     @FXML
     private TextField LayoutYTF;
-    
+
     @FXML
     private TextField ScalaXTF;
-    
+
     @FXML
     private TextField ScalaYTF;
-    
+
     @FXML
     private Label labelCenter;
 
@@ -369,6 +378,7 @@ public class MapViewController {
             }
         } else {
             logger.error("No File Selected Yet!");
+            FileProcesser.showError(2);
         }
     }
 
@@ -380,6 +390,7 @@ public class MapViewController {
             removemarker(true);
         } else {
             logger.error("Animation should be paused or No input File");
+            FileProcesser.showError(2);
         }
     }
 
@@ -413,42 +424,103 @@ public class MapViewController {
     }
 
     @FXML
-    private void HeatMapButton(ActionEvent event) {
-        RestartAnimation();
-        //adding this for testing Layouts and Scalas
-        if (!LayoutXTF.getText().isEmpty()){
-           LayoutX = Integer.parseInt(LayoutXTF.getText());
-        }
-        if (!LayoutYTF.getText().isEmpty()){
-           LayoutY = Integer.parseInt(LayoutYTF.getText());
-        }
-        if (!ScalaXTF.getText().isEmpty()){
-           ScalaX = Integer.parseInt(ScalaXTF.getText());
-        }
-        if (!ScalaXTF.getText().isEmpty()){
-           ScalaX = Integer.parseInt(ScalaXTF.getText());
-        }
-        ShowHeatMap();
-        /*Coordinate coord;
-        Marker Markers;
-        for (int i = 0; i < TimeStamps.size(); i++) {
-            if (TimeStamps.get(i).isBefore(Ido.plusHours(1))) {
-                //addmarker(IdsandCoordinates.get(i).get(0), IdsandCoordinates.get(i).get(1), IdsandCoordinates.get(i).get(2));  
-                coord = new Coordinate(IdsandCoordinates.get(i).get(1), IdsandCoordinates.get(i).get(2));
-                //Markers = Marker.createProvided(Marker.Provided.BLUE).setVisible(true);
-                Markers = new Marker(getClass().getResource("/ksc.png"), -20, -20).setPosition(coord).setVisible(true);
-                mapView.addMarker(Markers);
+    private void previousLinesButtonAction(ActionEvent event) {
+        if (!FilePath.equalsIgnoreCase("NOFILE")) {
+            if (heatmapCounter == 0) {
+                logger.error("counter already Zero");
+            } else {
+                heatmapCounter = heatmapCounter - 100;
+                ShowHeatMap();
             }
-        }*/
+        } else {
+            FileProcesser.showError(2);
+        }
+    }
+
+    @FXML
+    private void nextLinesButtonAction(ActionEvent event) {
+        if (!FilePath.equalsIgnoreCase("NOFILE")) {
+            if (heatmapCounter == 2500) {
+                logger.error("Max Counter reached");
+            } else {
+                heatmapCounter = heatmapCounter + 100;
+                ShowHeatMap();
+            }
+        } else {
+            FileProcesser.showError(2);
+        }
+
+    }
+
+    @FXML
+    private void HeatMapButton(ActionEvent event) {
+        if (!FilePath.equalsIgnoreCase("NOFILE")) {
+            RestartAnimation();
+            ShowHeatMap();
+            //adding this for testing Layouts and Scalas
+            /*if (!LayoutXTF.getText().isEmpty()){
+            LayoutX = Integer.parseInt(LayoutXTF.getText());
+            }
+            if (!LayoutYTF.getText().isEmpty()){
+               LayoutY = Integer.parseInt(LayoutYTF.getText());
+            }
+            if (!ScalaXTF.getText().isEmpty()){
+               ScalaX = Integer.parseInt(ScalaXTF.getText());
+            }
+            if (!ScalaXTF.getText().isEmpty()){
+               ScalaX = Integer.parseInt(ScalaXTF.getText());
+            }*/
+ /*Coordinate coord;
+            Marker Markers;
+            for (int i = 0; i < TimeStamps.size(); i++) {
+                if (TimeStamps.get(i).isBefore(Ido.plusHours(1))) {
+                    //addmarker(IdsandCoordinates.get(i).get(0), IdsandCoordinates.get(i).get(1), IdsandCoordinates.get(i).get(2));  
+                    coord = new Coordinate(IdsandCoordinates.get(i).get(1), IdsandCoordinates.get(i).get(2));
+                    //Markers = Marker.createProvided(Marker.Provided.BLUE).setVisible(true);
+                    Markers = new Marker(getClass().getResource("/ksc.png"), -20, -20).setPosition(coord).setVisible(true);
+                    mapView.addMarker(Markers);
+                }
+            }*/
+        } else {
+            FileProcesser.showError(2);
+        }
+    }
+
+    private void cleanHeatMap() {
+        for (int i = 0; i < CoordinateLineList.size(); i++) {
+            mapView.removeCoordinateLine(CoordinateLineList.get(i));
+        }
+
+    }
+
+    private void heatMapGenerator(int k) {
+        List<Coordinate> coordinates = new ArrayList<>();
+        for (int i = 0; i < TimeStamps.size(); i++) {
+            if (IdsandCoordinates.get(i).get(0) == k) {
+                Coordinate coord = new Coordinate(IdsandCoordinates.get(i).get(1), IdsandCoordinates.get(i).get(2));
+                coordinates.add(coord);
+            }
+        }
+        CoordinateLine coordinateLine = new CoordinateLine(coordinates);
+        coordinateLine.setColor(Color.BLUEVIOLET).setWidth(3).setVisible(true);
+        CoordinateLineList.add(coordinateLine);
     }
 
     public void ShowHeatMap() {
+        cleanHeatMap();
+        for (int i = heatmapCounter; i < heatmapCounter + 100; i++) {
+            heatMapGenerator(i);
+            mapView.addCoordinateLine(CoordinateLineList.get(i));
+        }
+    }
+
+    public void ShowHeatMapOld() {
         final double SCALE_DELTA = 1.1;
         Pane HM = new Pane();
         //Points.add(new HeatMapPoint(100, 100));
         for (int i = 0; i < TimeStamps.size(); i++) {
             if (TimeStamps.get(i).isBefore(Ido.plusHours(1))) {
-                HeatMapPoint HMP = new HeatMapPoint((Math.abs(IdsandCoordinates.get(i).get(1))), (Math.abs(IdsandCoordinates.get(i).get(2)) ));
+                HeatMapPoint HMP = new HeatMapPoint((Math.abs(IdsandCoordinates.get(i).get(1))), (Math.abs(IdsandCoordinates.get(i).get(2))));
                 //System.out.println("1: " + (Math.abs(IdsandCoordinates.get(i).get(1))) + " 2:" + (Math.abs(IdsandCoordinates.get(i).get(2)) ));
                 Points.add(HMP);
             }
@@ -456,7 +528,7 @@ public class MapViewController {
         System.out.println("Eredeti:" + HM.getLayoutY());
         HM.setLayoutX(LayoutX);
         HM.setLayoutY(LayoutY);
-        System.out.println("Layoutx:"+HM.getLayoutX());
+        System.out.println("Layoutx:" + HM.getLayoutX());
         System.out.println(HM.getLayoutY());
         HM.setScaleX(ScalaX);
         HM.setScaleY(ScalaY);

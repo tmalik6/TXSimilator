@@ -32,6 +32,7 @@ import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import unideb.sd.Model.FileProcesser;
 
 public class BarchartActions {
     private static final Logger logger = LoggerFactory.getLogger(BarchartActions.class);
@@ -63,6 +64,7 @@ public class BarchartActions {
             StagetoShow.show();
         } else {
             logger.error("No File Selected Yet!");
+            FileProcesser.showError(2);
         }
     }
     public static void BarchartActionsLocalDate(Map<LocalDate, Long> LocalMapom, String felirat, String xlabel, String FilePath, Stage StagetoShow) {
@@ -92,6 +94,7 @@ public class BarchartActions {
             StagetoShow.show();
         } else {
             logger.error("No File Selected Yet!");
+            FileProcesser.showError(2);
         }
     }
 }
